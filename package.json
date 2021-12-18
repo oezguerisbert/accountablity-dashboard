@@ -2,11 +2,12 @@
   "name": "accountability-dashboard",
   "version": "1.0.0",
   "scripts": {
+    "predev": "docker compose up -d",
     "dev": "blitz dev",
     "build": "blitz build",
     "start": "blitz start",
     "studio": "blitz prisma studio",
-    "lint": "eslint --ignore-path .gitignore --ext .js,.ts,.tsx .",
+    "lint": "eslint --fix --ignore-path .gitignore --ext .js,.ts,.tsx .",
     "test": "jest",
     "test:watch": "jest --watch",
     "prepare": "husky install"
@@ -15,8 +16,8 @@
     "schema": "db/schema.prisma"
   },
   "prettier": {
-    "semi": false,
-    "printWidth": 100
+    "semi": true,
+    "printWidth": 120
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [
