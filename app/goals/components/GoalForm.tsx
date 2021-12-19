@@ -6,7 +6,8 @@ export { FORM_ERROR } from "app/core/components/Form";
 export function GoalForm<S extends z.ZodType<any, any>>(props: FormProps<S>) {
   return (
     <Form<S> {...props}>
-      <LabeledTextField name="name" label="Name" placeholder="Name" />
+      <LabeledTextField size="lg" name="title" label="Title" placeholder="Title" />
+      <LabeledTextField size="lg" name="description" label="Description" placeholder="Description" />
     </Form>
   );
 }

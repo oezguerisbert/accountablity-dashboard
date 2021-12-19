@@ -4,7 +4,8 @@ import { z } from "zod";
 
 const UpdateGoal = z.object({
   id: z.number(),
-  name: z.string(),
+  title: z.string(),
+  description: z.ostring(),
 });
 
 export default resolver.pipe(resolver.zod(UpdateGoal), resolver.authorize(), async ({ id, ...data }) => {

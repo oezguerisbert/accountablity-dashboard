@@ -4,10 +4,12 @@ import Layout from "app/core/layouts/Layout";
 import getGoal from "app/goals/queries/getGoal";
 import updateGoal from "app/goals/mutations/updateGoal";
 import { GoalForm, FORM_ERROR } from "app/goals/components/GoalForm";
+import { Title } from "@mantine/core";
 
 export const EditGoal = () => {
   const router = useRouter();
   const goalId = useParam("goalId", "number");
+  const userId = useParam("userId", "number");
   const [goal, { setQueryData }] = useQuery(
     getGoal,
     { id: goalId },
@@ -24,16 +26,11 @@ export const EditGoal = () => {
         <title>Edit Goal {goal.id}</title>
       </Head>
 
-      <div>
-        <h1>Edit Goal {goal.id}</h1>
-        <pre>{JSON.stringify(goal, null, 2)}</pre>
+      <>
+        <Title>Edit Goal {goal.id}</Title>
 
         <GoalForm
           submitText="Update Goal"
-          // TODO use a zod schema for form validation
-          //  - Tip: extract mutation's schema into a shared `validations.ts` file and
-          //         then import and use it here
-          // schema={UpdateGoal}
           initialValues={goal}
           onSubmit={async (values) => {
             try {
@@ -42,7 +39,7 @@ export const EditGoal = () => {
                 ...values,
               });
               await setQueryData(updated);
-              router.push(Routes.ShowGoalPage({ goalId: updated.id }));
+              router.push(Routes.ShowGoalPage({ userId: userId as number, goalId: updated.id }));
             } catch (error: any) {
               console.error(error);
               return {
@@ -51,12 +48,14 @@ export const EditGoal = () => {
             }
           }}
         />
-      </div>
+      </>
     </>
   );
 };
 
 const EditGoalPage: BlitzPage = () => {
+  const userId = useParam("userId", "number");
+
   return (
     <div>
       <Suspense fallback={<div>Loading...</div>}>
@@ -64,7 +63,7 @@ const EditGoalPage: BlitzPage = () => {
       </Suspense>
 
       <p>
-        <Link href={Routes.GoalsPage()}>
+        <Link href={Routes.GoalsPage({ userId: userId as number })}>
           <a>Goals</a>
         </Link>
       </p>

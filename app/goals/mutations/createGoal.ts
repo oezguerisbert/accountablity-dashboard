@@ -3,12 +3,13 @@ import db from "db";
 import { z } from "zod";
 
 const CreateGoal = z.object({
-  name: z.string(),
+  userId: z.number(),
+  title: z.string(),
+  description: z.ostring(),
 });
 
-export default resolver.pipe(resolver.zod(CreateGoal), resolver.authorize(), async (input) => {
-  // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-  const goal = await db.goal.create({ data: input });
+export default resolver.pipe(resolver.zod(CreateGoal), resolver.authorize(), async ({ userId, ...input }) => {
+  const goal = await db.goal.create({ data: { ...input, user: { connect: { id: userId } } } });
 
   return goal;
 });

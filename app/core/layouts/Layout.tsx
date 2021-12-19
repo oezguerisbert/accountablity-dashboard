@@ -1,16 +1,26 @@
-import { Head, BlitzLayout } from "blitz"
+import { Head, BlitzLayout } from "blitz";
+import { Box, Container } from "@mantine/core";
 
-const Layout: BlitzLayout<{title?: string}> = ({ title, children }) => {
+const Layout: BlitzLayout<{ title?: string }> = ({ title, children }) => {
   return (
     <>
       <Head>
-        <title>{title || "accountability-dashboard"}</title>
+        <title>{title || "Accountability Dashboard"}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      {children}
+      <Box
+        sx={(theme) => ({
+          display: "flex",
+          flexDirection: "column",
+          paddingTop: 70,
+          paddingBottom: theme.spacing.xl,
+        })}
+      >
+        <Container size="lg">{children}</Container>
+      </Box>
     </>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

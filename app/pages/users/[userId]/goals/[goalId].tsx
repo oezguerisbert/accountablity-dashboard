@@ -3,57 +3,61 @@ import { Head, Link, useRouter, useQuery, useParam, BlitzPage, useMutation, Rout
 import Layout from "app/core/layouts/Layout";
 import getGoal from "app/goals/queries/getGoal";
 import deleteGoal from "app/goals/mutations/deleteGoal";
+import { Title, Button, Anchor } from "@mantine/core";
 
 export const Goal = () => {
   const router = useRouter();
   const goalId = useParam("goalId", "number");
+  const userId = useParam("userId", "number");
   const [deleteGoalMutation] = useMutation(deleteGoal);
   const [goal] = useQuery(getGoal, { id: goalId });
 
   return (
     <>
       <Head>
-        <title>Goal {goal.id}</title>
+        <title>{goal.title}</title>
       </Head>
 
-      <div>
-        <h1>Goal {goal.id}</h1>
-        <pre>{JSON.stringify(goal, null, 2)}</pre>
+      <Title order={1}>Goal {goal.title}</Title>
+      <Link href={Routes.EditGoalPage({ userId: userId as number, goalId: goal.id })}>
+        <Anchor>
+          <Button>Edit</Button>
+        </Anchor>
+      </Link>
 
-        <Link href={Routes.EditGoalPage({ goalId: goal.id })}>
-          <a>Edit</a>
-        </Link>
-
-        <button
-          type="button"
-          onClick={async () => {
-            if (window.confirm("This will be deleted")) {
-              await deleteGoalMutation({ id: goal.id });
-              router.push(Routes.GoalsPage());
-            }
-          }}
-          style={{ marginLeft: "0.5rem" }}
-        >
-          Delete
-        </button>
-      </div>
+      <Button
+        type="button"
+        onClick={async () => {
+          if (window.confirm("This will be deleted")) {
+            await deleteGoalMutation({ id: goal.id });
+            router.push(Routes.GoalsPage({ userId: userId as number }));
+          }
+        }}
+        style={{ marginLeft: "0.5rem" }}
+      >
+        Delete
+      </Button>
     </>
   );
 };
 
 const ShowGoalPage: BlitzPage = () => {
+  const userId = useParam("userId", "number");
+
   return (
-    <div>
-      <p>
-        <Link href={Routes.GoalsPage()}>
-          <a>Goals</a>
+    <>
+      <>
+        <Link href={Routes.GoalsPage({ userId: userId as number })}>
+          <Anchor>
+            <Button>Goals</Button>
+          </Anchor>
         </Link>
-      </p>
+      </>
 
       <Suspense fallback={<div>Loading...</div>}>
         <Goal />
       </Suspense>
-    </div>
+    </>
   );
 };
 

@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { Head, Link, usePaginatedQuery, useRouter, BlitzPage, Routes, useParam } from "blitz";
 import Layout from "app/core/layouts/Layout";
 import getGoals from "app/goals/queries/getGoals";
-import { Button, Anchor, List } from "@mantine/core";
+import { List, Anchor, Button, Box } from "@mantine/core";
 
 const ITEMS_PER_PAGE = 100;
 
@@ -54,7 +54,7 @@ export const GoalsList = () => {
   );
 };
 
-const GoalsPage: BlitzPage = () => {
+const UserPage: BlitzPage = () => {
   const userId = useParam("userId", "number");
 
   return (
@@ -63,9 +63,12 @@ const GoalsPage: BlitzPage = () => {
         <title>Goals</title>
       </Head>
 
-      <Link href={Routes.NewGoalPage({ userId: userId as number })}>
-        <Button>Create Goal</Button>
+      <Link href={Routes.NewGoalPage({ userId: userId as number })} passHref>
+        <Anchor>
+          <Button>Create Goal</Button>
+        </Anchor>
       </Link>
+
       <Suspense fallback={<div>Loading...</div>}>
         <GoalsList />
       </Suspense>
@@ -73,7 +76,7 @@ const GoalsPage: BlitzPage = () => {
   );
 };
 
-GoalsPage.authenticate = true;
-GoalsPage.getLayout = (page) => <Layout>{page}</Layout>;
+UserPage.authenticate = true;
+UserPage.getLayout = (page) => <Layout>{page}</Layout>;
 
-export default GoalsPage;
+export default UserPage;

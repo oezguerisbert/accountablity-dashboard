@@ -1,27 +1,24 @@
-import { Link, useRouter, useMutation, BlitzPage, Routes } from "blitz";
+import { Link, useRouter, useMutation, BlitzPage, Routes, useParam } from "blitz";
 import Layout from "app/core/layouts/Layout";
 import createGoal from "app/goals/mutations/createGoal";
 import { GoalForm, FORM_ERROR } from "app/goals/components/GoalForm";
+import { Anchor, Title } from "@mantine/core";
 
 const NewGoalPage: BlitzPage = () => {
   const router = useRouter();
+  const userId = useParam("userId", "number");
   const [createGoalMutation] = useMutation(createGoal);
 
   return (
-    <div>
-      <h1>Create New Goal</h1>
+    <>
+      <Title order={1}>Create New Goal</Title>
 
       <GoalForm
         submitText="Create Goal"
-        // TODO use a zod schema for form validation
-        //  - Tip: extract mutation's schema into a shared `validations.ts` file and
-        //         then import and use it here
-        // schema={CreateGoal}
-        // initialValues={{}}
         onSubmit={async (values) => {
           try {
-            const goal = await createGoalMutation(values);
-            router.push(Routes.ShowGoalPage({ goalId: goal.id }));
+            const goal = await createGoalMutation(Object.assign(values, { userId: userId as number }));
+            router.push(Routes.ShowGoalPage({ userId: userId as number, goalId: goal.id }));
           } catch (error: any) {
             console.error(error);
             return {
@@ -31,12 +28,12 @@ const NewGoalPage: BlitzPage = () => {
         }}
       />
 
-      <p>
-        <Link href={Routes.GoalsPage()}>
-          <a>Goals</a>
+      <>
+        <Link href={Routes.GoalsPage({ userId: userId as number })} passHref>
+          <Anchor>Goals</Anchor>
         </Link>
-      </p>
-    </div>
+      </>
+    </>
   );
 };
 

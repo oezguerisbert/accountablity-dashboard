@@ -4,6 +4,7 @@ import Layout from "app/core/layouts/Layout";
 import getTeam from "app/teams/queries/getTeam";
 import updateTeam from "app/teams/mutations/updateTeam";
 import { TeamForm, FORM_ERROR } from "app/teams/components/TeamForm";
+import { Anchor, Title, Button } from "@mantine/core";
 
 export const EditTeam = () => {
   const router = useRouter();
@@ -12,7 +13,6 @@ export const EditTeam = () => {
     getTeam,
     { id: teamId },
     {
-      // This ensures the query never refreshes and overwrites the form data while the user is editing.
       staleTime: Infinity,
     }
   );
@@ -24,16 +24,11 @@ export const EditTeam = () => {
         <title>Edit Team {team.id}</title>
       </Head>
 
-      <div>
-        <h1>Edit Team {team.id}</h1>
-        <pre>{JSON.stringify(team, null, 2)}</pre>
+      <>
+        <Title>Edit Team {team.id}</Title>
 
         <TeamForm
           submitText="Update Team"
-          // TODO use a zod schema for form validation
-          //  - Tip: extract mutation's schema into a shared `validations.ts` file and
-          //         then import and use it here
-          // schema={UpdateTeam}
           initialValues={team}
           onSubmit={async (values) => {
             try {
@@ -51,24 +46,24 @@ export const EditTeam = () => {
             }
           }}
         />
-      </div>
+      </>
     </>
   );
 };
 
 const EditTeamPage: BlitzPage = () => {
   return (
-    <div>
+    <>
       <Suspense fallback={<div>Loading...</div>}>
         <EditTeam />
       </Suspense>
 
-      <p>
-        <Link href={Routes.TeamsPage()}>
-          <a>Teams</a>
-        </Link>
-      </p>
-    </div>
+      <Link href={Routes.TeamsPage()}>
+        <Anchor>
+          <Button>Teams</Button>
+        </Anchor>
+      </Link>
+    </>
   );
 };
 
