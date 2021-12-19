@@ -1,14 +1,14 @@
 import { Suspense } from "react";
 import { Head, Link, usePaginatedQuery, useRouter, BlitzPage, Routes } from "blitz";
 import Layout from "app/core/layouts/Layout";
-import getGoals from "app/goals/queries/getGoals";
+import getTeams from "app/teams/queries/getTeams";
 
 const ITEMS_PER_PAGE = 100;
 
-export const GoalsList = () => {
+export const TeamsList = () => {
   const router = useRouter();
   const page = Number(router.query.page) || 0;
-  const [{ goals, hasMore }] = usePaginatedQuery(getGoals, {
+  const [{ teams, hasMore }] = usePaginatedQuery(getTeams, {
     orderBy: { id: "asc" },
     skip: ITEMS_PER_PAGE * page,
     take: ITEMS_PER_PAGE,
@@ -20,10 +20,10 @@ export const GoalsList = () => {
   return (
     <div>
       <ul>
-        {goals.map((goal) => (
-          <li key={goal.id}>
-            <Link href={Routes.ShowGoalPage({ goalId: goal.id })}>
-              <a>{goal.name}</a>
+        {teams.map((team) => (
+          <li key={team.id}>
+            <Link href={Routes.ShowTeamPage({ teamId: team.id })}>
+              <a>{team.name}</a>
             </Link>
           </li>
         ))}
@@ -39,29 +39,29 @@ export const GoalsList = () => {
   );
 };
 
-const GoalsPage: BlitzPage = () => {
+const TeamsPage: BlitzPage = () => {
   return (
     <>
       <Head>
-        <title>Goals</title>
+        <title>Teams</title>
       </Head>
 
       <div>
         <p>
-          <Link href={Routes.NewGoalPage()}>
-            <a>Create Goal</a>
+          <Link href={Routes.NewTeamPage()}>
+            <a>Create Team</a>
           </Link>
         </p>
 
         <Suspense fallback={<div>Loading...</div>}>
-          <GoalsList />
+          <TeamsList />
         </Suspense>
       </div>
     </>
   );
 };
 
-GoalsPage.authenticate = true;
-GoalsPage.getLayout = (page) => <Layout>{page}</Layout>;
+TeamsPage.authenticate = true;
+TeamsPage.getLayout = (page) => <Layout>{page}</Layout>;
 
-export default GoalsPage;
+export default TeamsPage;

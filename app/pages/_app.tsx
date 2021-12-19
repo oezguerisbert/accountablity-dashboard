@@ -1,6 +1,6 @@
 import { AppShell, Avatar, Box, Header, MantineProvider, Menu, Divider } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
-import { MapIcon, UserIcon, LogoutIcon } from "@heroicons/react/solid";
+import { MapIcon, UserIcon, LogoutIcon, SparklesIcon } from "@heroicons/react/solid";
 import LoginForm from "app/auth/components/LoginForm";
 import getGoals from "app/goals/queries/getGoals";
 import {
@@ -26,10 +26,6 @@ const UserInfo = () => {
   const currentUser = useCurrentUser();
   const [logoutMutation] = useMutation(logout);
   const [baseMenuItems] = useState([
-    <Menu.Item key={0} leftIcon={<MapIcon width={15} />}>
-      My Goals
-    </Menu.Item>,
-    <Divider key={1} />,
     <Menu.Label
       key={2}
       sx={(theme) => ({
@@ -42,11 +38,21 @@ const UserInfo = () => {
       <UserIcon width={15} />
       User
     </Menu.Label>,
-    <Menu.Item key={3} icon={<UserIcon width={15} />}>
+    <Menu.Item key={3} icon={<UserIcon width={15} />} color="blue">
       My Profile
     </Menu.Item>,
     <Menu.Item
       key={4}
+      icon={<SparklesIcon width={15} />}
+      color="yellow"
+      onClick={() => {
+        router.push(Routes.GoalsPage({ userId: currentUser!.id }));
+      }}
+    >
+      My Goals
+    </Menu.Item>,
+    <Menu.Item
+      key={5}
       icon={<LogoutIcon width={15} />}
       color="red"
       onClick={() => {
